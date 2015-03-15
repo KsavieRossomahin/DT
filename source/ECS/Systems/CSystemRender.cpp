@@ -7,8 +7,8 @@ void CSystemRender::process()
 	for(size_t idx = 0; idx < _entities->size(); idx++)
 	{
 		CComponentsCollection* collection = (*_entities)[idx]->collection();
-		CComponentSprite* render = dynamic_cast <CComponentSprite*> (collection->getComponent(EComponentType::ECT_SPRITE));
-		CComponentPosition* position = dynamic_cast <CComponentPosition*> (collection->getComponent(EComponentType::ECT_POSITION));
+		CComponentSprite* render = static_cast <CComponentSprite*> (collection->getComponent <CComponentSprite> ());
+		CComponentPosition* position = static_cast <CComponentPosition*> (collection->getComponent <CComponentPosition> ());
 		
 		if(!render)
 			continue;

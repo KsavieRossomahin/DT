@@ -7,7 +7,7 @@ class CComponentSprite : public IComponent
 {
 public:
 	CComponentSprite();
-	~CComponentSprite();
+	virtual ~CComponentSprite();
 
 	CIwGxStream* xyStream();
 	CIwGxStream* colStream();

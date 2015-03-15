@@ -1,13 +1,13 @@
 function testFunc()
 
 	Engine.printMessage("testFunc begin")
-	
-	print("123")
 
 	en = Engine.createEntity()
-	Engine.CComponentsCollection col = en:collection()
-	col:getComponent(1)
-	
-	Engine.printMessage("testFunc end1")
+	Engine.destroyEntity(en)
+	--col = en:collection()
+	--size = col:size()
+	--print("size", size)
+
+	Engine.printMessage("testFunc end")
 
 end

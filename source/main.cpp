@@ -1,23 +1,16 @@
 #include "s3e.h"
 #include "IwGx.h"
+#include "s3eKeyboard.h"
 
 #include "ECS/Entities/CEntity.h"
 #include "ECS/Systems/CSystemRender.h"
 #include "ECS/Systems/CSystemPhysics.h"
+#include "ECS/Systems/CSystemLua.h"
 
-extern "C"
-{
-#include "LuaLib/Include/lua.h"
-#include "LuaLib/Include/lauxlib.h"
-#include "LuaLib/Include/lualib.h"
-}
-
-#include "LuaBridge/LuaBridge.h"
-
-CSystemRender* render;
-CSystemPhysics* physics;
-vector <CEntity*>* entities;
-lua_State* L;
+CSystemRender* render = NULL;
+CSystemPhysics* physics = NULL;
+CSystemLua* lua = NULL;
+vector <CEntity*>* entities = NULL;
 
 s3eCallback keyEventHandler(s3eKeyboardEvent* event)
 {
@@ -25,57 +18,33 @@ s3eCallback keyEventHandler(s3eKeyboardEvent* event)
 	{
 		//physics->input(event->m_Key);
 
-		lua_getglobal(L, "testFunc");
-		lua_pcall(L, 0, 0, 0);
-	
+		if(event->m_Key == s3eKeyR)
+		{
+			delete lua;
+			lua = new CSystemLua;
+		}
+		else if (event->m_Key == s3eKeyQ)
+		{
+			lua->call("testFunc");
+		}
 	}
 
     return 0;
 }
 
-void printMessage(const string& message)
-{
-	printf("%s\n", message.c_str());
-}
-
 CEntity* createEntity()
 {
 	CEntity* entity = new CEntity;
-	entity->collection()->addComponent(EComponentType::ECT_POSITION);
-	entity->collection()->addComponent(EComponentType::ECT_VELOCITY);
-	entity->collection()->addComponent(EComponentType::ECT_SPRITE);
+	entity->collection()->addComponent <CComponentPosition> ();
+	entity->collection()->addComponent <CComponentVelocity> ();
+	entity->collection()->addComponent <CComponentSprite> ();
 	entities->push_back(entity);
 
 	return entity;
 }
 
-using namespace luabridge;
-
 int main()
 {	
-	L = luaL_newstate();
-	luaL_openlibs(L);
-	
-	getGlobalNamespace(L)
-		.beginNamespace("Engine")
-		.addFunction("printMessage", &printMessage)
-		.addFunction("createEntity", &createEntity)
-		.beginClass <CEntity> ("CEntity")
-			.addFunction("collection", &CEntity::collection)
-		.endClass()
-		.beginClass <CComponentsCollection> ("CComponentsCollection")
-			.addFunction("getComponent", &CComponentsCollection::getComponent)
-		.endClass()
-		.beginClass <IComponent> ("IComponent")
-		.endClass()
-		.deriveClass <CComponentPosition, IComponent> ("CComponentPosition")
-			.addFunction("posX", &CComponentPosition::posX)
-		.endClass()
-		.endNamespace();
-	
-	luaL_dofile(L, "script.lua");
-
-
 	s3eKeyboardRegister(S3E_KEYBOARD_KEY_EVENT, (s3eCallback) keyEventHandler, NULL);
 
 	IwGxInit();
@@ -83,8 +52,11 @@ int main()
 
 	render = new CSystemRender;
 	physics = new CSystemPhysics;
+	lua = new CSystemLua;
 
 	entities = new vector <CEntity*>;
+	//createEntity();
+	lua->init(*entities);
 	render->init(*entities);
 	physics->init(*entities);
 
@@ -99,12 +71,15 @@ int main()
 
 		physics->process();
 		render->process();
+		lua->process();
 
 		s3eDeviceYield(0);
 	};
 
 	delete render;
 	delete physics;
+	delete lua;
+
 	for(size_t idx = 0; idx < entities->size(); idx++)
 		delete (*entities)[idx];
 	delete entities;

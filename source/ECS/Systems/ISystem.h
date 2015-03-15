@@ -10,5 +10,5 @@ public:
 	virtual void process() = 0;
 
 protected:
-	vector <CEntity*>* _entities;
+	static vector <CEntity*>* _entities;
 };

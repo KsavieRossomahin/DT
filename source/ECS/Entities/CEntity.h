@@ -6,6 +6,7 @@ class CEntity
 {
 public:
 	CEntity();
+	~CEntity();
 	CComponentsCollection* collection();
 
 private:

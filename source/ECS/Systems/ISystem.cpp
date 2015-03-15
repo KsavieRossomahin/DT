@@ -2,6 +2,8 @@
 
 #include "ISystem.h"
 
+vector <CEntity*>* ISystem::_entities = NULL;
+
 ISystem::~ISystem()
 {
 }

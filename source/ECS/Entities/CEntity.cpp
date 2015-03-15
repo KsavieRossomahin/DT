@@ -2,7 +2,12 @@
 
 CEntity::CEntity()
 {
-	int a = 0;
+	printf("Entity created: 0x%X\n", this);
+}
+
+CEntity::~CEntity()
+{
+	printf("Entity destroyed: 0x%X\n", this);
 }
 
 CComponentsCollection* CEntity::collection()

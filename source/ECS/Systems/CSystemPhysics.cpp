@@ -5,8 +5,8 @@ void CSystemPhysics::process()
 	for(size_t idx = 0; idx < _entities->size(); idx++)
 	{
 		CComponentsCollection* collection = (*_entities)[idx]->collection();
-		CComponentPosition* position = dynamic_cast <CComponentPosition*> (collection->getComponent(EComponentType::ECT_POSITION));
-		CComponentVelocity* velocity = dynamic_cast <CComponentVelocity*> (collection->getComponent(EComponentType::ECT_VELOCITY));
+		CComponentPosition* position = static_cast <CComponentPosition*> (collection->getComponent <CComponentPosition> ());
+		CComponentVelocity* velocity = static_cast <CComponentVelocity*> (collection->getComponent <CComponentVelocity> ());
 
 		if(!position)
 			continue;
@@ -34,7 +34,7 @@ void CSystemPhysics::process()
 
 void CSystemPhysics::input(s3eKey key)
 {
-	CComponentVelocity* velocity = dynamic_cast <CComponentVelocity*> ((*_entities)[0]->collection()->getComponent(EComponentType::ECT_VELOCITY));
+	CComponentVelocity* velocity = static_cast <CComponentVelocity*> ((*_entities)[0]->collection()->getComponent <CComponentVelocity> ());
 	
 	if(velocity)
 	{
