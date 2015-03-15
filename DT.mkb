@@ -1,0 +1,57 @@
+options
+{
+	cflags="-std=c++11"
+}
+
+includepaths
+{
+	source
+}
+
+files
+{
+	[source]
+	(source)
+	"*.cpp"
+	
+	[source/ECS/Entities]
+	(source/ECS/Entities)
+	"*.h"
+	"*.cpp"
+
+	[source/ECS/Components]
+	(source/ECS/Components)
+	"*.h"
+	"*.cpp"
+
+	[source/ECS/Systems]
+	(source/ECS/Systems)
+	"*.h"
+	"*.cpp"
+
+	[source/ECS/Utils]
+	(source/ECS/Utils)
+	"*.h"
+
+	[source/LuaLib/Include]
+	(source/LuaLib/Include)
+	"*.hpp"
+	"*.h"
+	"*.c"
+
+	[source/LuaBridge]
+	(source/LuaBridge)
+	"*.h"
+	(source/LuaBridge/detail)
+	"*.h"
+}
+
+subprojects
+{
+	iwgx
+}
+
+assets
+{
+
+}
